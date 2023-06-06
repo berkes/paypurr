@@ -1,0 +1,61 @@
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+
+  justify-content: space-evenly;
+  align-items: start;
+  background: #f5f5f5;
+}
+
+#brand {
+  width: 100%;
+  text-align: center;
+
+  #logo {
+    height: 60px;
+    width: 60px;
+    padding: 0 2rem 0;
+    vertical-align: middle;
+  }
+
+  .name {
+    font-weight: bold;
+    color: #000;
+    vertical-align: middle;
+  }
+}
+
+.preview {
+  margin: 2rem;
+  aspect-ratio: 1 / 1.4142;
+  min-height: 40rem;
+  max-height: 80vh;
+}
+
+.input {
+  margin: 2rem;
+  padding: 2rem;
+  aspect-ratio: 1 / 1.4142;
+  min-height: 40rem;
+  max-height: 80vh;
+}
+
+.paper {
+  background: #fff;
+  box-shadow:
+    /* The top layer shadow */
+    0 1px 1px rgba(0,0,0,0.15),
+    /* The second layer */
+    0 10px 0 -5px #eee,
+    /* The second layer shadow */
+    0 10px 1px -4px rgba(0,0,0,0.15),
+     /* The third layer */
+    0 20px 0 -10px #eee,
+    /* The third layer shadow */
+    0 20px 1px -9px rgba(0,0,0,0.15);
+    /* Padding for demo purposes */
+    padding: 30px;
+}
+.preview .logo {
+  max-width: 100%;
+}
