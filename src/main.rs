@@ -35,7 +35,7 @@ fn App() -> Html {
         <div class="wrapper">
             <h1 id="brand">
                 <img id="logo" src="logo.svg" />
-                <span class="name">{{ "paypurr" }}</span>
+                <span class="name">{{ "PayPurr" }}</span>
             </h1>
             <div class="input">
                 <input
