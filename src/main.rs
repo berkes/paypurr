@@ -1,5 +1,5 @@
 use wasm_bindgen::JsCast;
-use web_sys::{HtmlInputElement, HtmlTextAreaElement};
+use web_sys::{HtmlElement, HtmlInputElement, HtmlTextAreaElement};
 use yew::prelude::*;
 
 #[function_component]
@@ -14,41 +14,28 @@ fn App() -> Html {
     let logo_url_handler = use_state(String::default);
     let logo_url_value = (*logo_url_handler).clone();
 
-    let update_url = {
+    fn create_update_handler<T>(handler: T) -> Callback<Event>
+    where
+        T: Fn(String) + 'static,
+    {
         Callback::from(move |event: Event| {
-            let input = event
-                .target()
-                .and_then(|t| t.dyn_into::<HtmlInputElement>().ok());
-
-            if let Some(input) = input {
-                logo_url_handler.set(input.value());
+            if let Some(input) = event.target().and_then(|t| {
+                if let Some(input) = t.dyn_ref::<HtmlInputElement>() {
+                    Some::<String>(input.value().into())
+                } else if let Some(text_area) = t.dyn_ref::<HtmlTextAreaElement>() {
+                    Some::<String>(text_area.value().into())
+                } else {
+                    None
+                }
+            }) {
+                handler(input);
             }
         })
-    };
+    }
 
-    let update_description = {
-        Callback::from(move |event: Event| {
-            let input = event
-                .target()
-                .and_then(|t| t.dyn_into::<HtmlTextAreaElement>().ok());
-
-            if let Some(input) = input {
-                description_handler.set(input.value());
-            }
-        })
-    };
-
-    let update_to = {
-        Callback::from(move |event: Event| {
-            let input = event
-                .target()
-                .and_then(|t| t.dyn_into::<HtmlTextAreaElement>().ok());
-
-            if let Some(input) = input {
-                to_handler.set(input.value());
-            }
-        })
-    };
+    let update_description = create_update_handler(move |value| description_handler.set(value));
+    let update_url = create_update_handler(move |value| logo_url_handler.set(value));
+    let update_to = create_update_handler(move |value| to_handler.set(value));
 
     html! {
         <div class="wrapper">
