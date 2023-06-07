@@ -5,7 +5,11 @@ use yew::prelude::*;
 #[function_component]
 fn App() -> Html {
     let to_handler = use_state(String::default);
-    let to_value = (*to_handler).clone();
+    let to_value = to_handler.to_string();
+
+    let description_handler = use_state(String::default);
+    let description_value =
+        Html::from_html_unchecked(format!("<div>{}</div>", *description_handler).into());
 
     let logo_url_handler = use_state(String::default);
     let logo_url_value = (*logo_url_handler).clone();
@@ -18,6 +22,18 @@ fn App() -> Html {
 
             if let Some(input) = input {
                 logo_url_handler.set(input.value());
+            }
+        })
+    };
+
+    let update_description = {
+        Callback::from(move |event: Event| {
+            let input = event
+                .target()
+                .and_then(|t| t.dyn_into::<HtmlTextAreaElement>().ok());
+
+            if let Some(input) = input {
+                description_handler.set(input.value());
             }
         })
     };
@@ -52,16 +68,24 @@ fn App() -> Html {
                <textarea
                    name="to"
                    rows="2"
+                   value={to_value.clone()}
                    onchange={update_to}
+                />
+
+               <label for="description">{{ "Description" }}</label>
+               <textarea
+                   name="description"
+                   rows="4"
+                   onchange={update_description}
                 />
             </div>
             <div class="preview paper">
                 <img class="logo" src={ logo_url_value } alt="logo" />
                 <br/>
                 <strong>{{"to:"}}</strong><br/>
-                <pre>
-                    {{ to_value }}
-                </pre>
+                <pre>{{ to_value }}</pre>
+
+                <p>{{ description_value }}</p>
             </div>
         </div>
     }
