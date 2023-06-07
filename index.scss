@@ -35,10 +35,14 @@
 
 .input {
   margin: 2rem;
-  padding: 2rem;
   aspect-ratio: 1 / 1.4142;
   min-height: 40rem;
   max-height: 80vh;
+
+  .field {
+    display: block;
+    margin: 1rem 0;
+  }
 }
 
 .paper {
