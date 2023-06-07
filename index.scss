@@ -38,11 +38,6 @@
   aspect-ratio: 1 / 1.4142;
   min-height: 40rem;
   max-height: 80vh;
-
-  .field {
-    display: block;
-    margin: 1rem 0;
-  }
 }
 
 .paper {
@@ -63,4 +58,46 @@
 }
 .preview .logo {
   max-width: 100%;
+}
+
+legend,
+fieldset,
+select,
+textarea,
+input,
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+input,
+select,
+textarea {
+  border: 2px solid #666;
+  background-color: white;
+  border-radius: 0.25rem;
+}
+
+label {
+  display: inline-block;
+  font: bold 1rem sans-serif;
+  margin-top: 0.5rem;
+}
+
+input[type="text"],
+input[type="url"],
+input[type="email"],
+select,
+textarea {
+  font: 1rem sans-serif;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
 }

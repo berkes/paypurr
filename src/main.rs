@@ -42,7 +42,6 @@ fn App() -> Html {
             </h1>
             <div class="input">
                 <input
-                    class="field"
                     type="url"
                     onchange={update_url}
                     placeholder="http://example.com/logo-url.png"
@@ -51,11 +50,10 @@ fn App() -> Html {
 
                <label for="to">{{ "To" }}</label>
                <textarea
-                 class="field"
-                 name="to"
-                 rows="3"
-                 onchange={update_to}
-                 />
+                   name="to"
+                   rows="2"
+                   onchange={update_to}
+                />
             </div>
             <div class="preview paper">
                 <img class="logo" src={ logo_url_value } alt="logo" />
