@@ -40,11 +40,11 @@ fn App() -> Html {
     let description_value =
         Html::from_html_unchecked(format!("<div>{}</div>", *description_handler).into());
 
-    fn create_update_handler<T>(handler: T) -> Callback<Event>
+    fn create_update_handler<T>(handler: T) -> Callback<InputEvent>
     where
         T: Fn(String) + 'static,
     {
-        Callback::from(move |event: Event| {
+        Callback::from(move |event: InputEvent| {
             if let Some(input) = event.target().and_then(|t| {
                 if let Some(input) = t.dyn_ref::<HtmlInputElement>() {
                     Some::<String>(input.value().into())
@@ -89,7 +89,7 @@ fn App() -> Html {
             <div class="input">
                 <input
                     type="url"
-                    onchange={update_url}
+                    oninput={update_url}
                     placeholder="http://example.com/logo-url.png"
                     value={logo_url_value.clone()}
                 />
@@ -99,7 +99,7 @@ fn App() -> Html {
                    type="text"
                    name="number"
                    value={number_value.clone()}
-                   onchange={update_number}
+                   oninput={update_number}
                 />
 
                <label for="issued_on">{{ "Issued on" }}</label>
@@ -115,14 +115,14 @@ fn App() -> Html {
                    name="to"
                    rows="2"
                    value={to_value.clone()}
-                   onchange={update_to}
+                   oninput={update_to}
                 />
 
                <label for="description">{{ "Description" }}</label>
                <textarea
                    name="description"
                    rows="4"
-                   onchange={update_description}
+                   oninput={update_description}
                 />
             </div>
 
