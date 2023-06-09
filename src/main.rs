@@ -2,7 +2,7 @@ use chrono::{Duration, Local, NaiveDate};
 use log::error;
 use wasm_bindgen::JsCast;
 use web_sys::{EventTarget, HtmlInputElement, HtmlTextAreaElement};
-use yew::prelude::*;
+use yew::{prelude::*, virtual_dom::VNode};
 
 fn initial_number() -> String {
     "TBD".to_string()
@@ -17,6 +17,10 @@ fn in_four_weeks() -> NaiveDate {
 
 fn add_four_weeks(date: NaiveDate) -> NaiveDate {
     date + Duration::weeks(4)
+}
+
+fn nl2br(input: String) -> VNode {
+    Html::from_html_unchecked(format!("<p>{}</p>", input.replace("\n", "<br/>")).into())
 }
 
 #[function_component]
@@ -130,7 +134,7 @@ fn App() -> Html {
                 <img class="logo" src={ logo_url_value } alt="logo" />
                 <br/>
                 <strong>{{"to:"}}</strong><br/>
-                <pre>{{ to_value }}</pre>
+                <p>{{ nl2br(to_value) }}</p>
                 <p><strong>{{"#"}}</strong>{{ number_value }}</p>
                 <p><strong>{{"issued on "}}</strong>{{ issued_on_value.format("%d-%m-%Y") }}</p>
                 <p><strong>{{"due on "}}</strong>{{ due_on_value.format("%d-%m-%Y") }}</p>
