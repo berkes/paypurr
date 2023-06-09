@@ -1,9 +1,22 @@
+use chrono::{Duration, Local, NaiveDate};
+use log::error;
 use wasm_bindgen::JsCast;
-use web_sys::{HtmlInputElement, HtmlTextAreaElement};
+use web_sys::{EventTarget, HtmlInputElement, HtmlTextAreaElement};
 use yew::prelude::*;
 
 fn initial_number() -> String {
     "TBD".to_string()
+}
+
+fn today() -> NaiveDate {
+    Local::now().date_naive()
+}
+fn in_four_weeks() -> NaiveDate {
+    add_four_weeks(today())
+}
+
+fn add_four_weeks(date: NaiveDate) -> NaiveDate {
+    date + Duration::weeks(4)
 }
 
 #[function_component]
@@ -16,6 +29,12 @@ fn App() -> Html {
 
     let number_handler = use_state(initial_number);
     let number_value = number_handler.to_string();
+
+    let issued_on_handler = use_state(today);
+    let issued_on_value = *issued_on_handler;
+
+    let due_on_handler = use_state(in_four_weeks);
+    let due_on_value = *due_on_handler;
 
     let description_handler = use_state(String::default);
     let description_value =
@@ -44,6 +63,22 @@ fn App() -> Html {
     let update_to = create_update_handler(move |value| to_handler.set(value));
     let update_number = create_update_handler(move |value| number_handler.set(value));
     let update_description = create_update_handler(move |value| description_handler.set(value));
+    let update_issued_on = {
+        Callback::from(move |event: Event| {
+            let target: Option<EventTarget> = event.target();
+            let input = target.and_then(|t| t.dyn_into::<HtmlInputElement>().ok());
+
+            if let Some(input) = input {
+                match NaiveDate::parse_from_str(&input.value(), "%Y-%m-%d") {
+                    Ok(date) => {
+                        issued_on_handler.set(date);
+                        due_on_handler.set(add_four_weeks(date));
+                    },
+                    Err(e) => error!("parse date: {}", e),
+                };
+            }
+        })
+    };
 
     html! {
         <div class="wrapper">
@@ -65,6 +100,14 @@ fn App() -> Html {
                    name="number"
                    value={number_value.clone()}
                    onchange={update_number}
+                />
+
+               <label for="issued_on">{{ "Issued on" }}</label>
+               <input
+                   type="date"
+                   name="issued_on"
+                   value={issued_on_value.format("%Y-%m-%d").to_string()}
+                   onchange={update_issued_on}
                 />
 
                <label for="to">{{ "To" }}</label>
@@ -89,6 +132,8 @@ fn App() -> Html {
                 <strong>{{"to:"}}</strong><br/>
                 <pre>{{ to_value }}</pre>
                 <p><strong>{{"#"}}</strong>{{ number_value }}</p>
+                <p><strong>{{"issued on "}}</strong>{{ issued_on_value.format("%d-%m-%Y") }}</p>
+                <p><strong>{{"due on "}}</strong>{{ due_on_value.format("%d-%m-%Y") }}</p>
 
                 <p>{{ description_value }}</p>
             </div>
