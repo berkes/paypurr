@@ -23,6 +23,38 @@ fn nl2br(input: String) -> VNode {
     Html::from_html_unchecked(format!("<p>{}</p>", input.replace("\n", "<br/>")).into())
 }
 
+fn format_currency(amount: &isize) -> String {
+    let euros = amount / 100;
+    let cents = amount % 100;
+    format!("€ {}.{}", euros, cents)
+}
+
+#[derive(PartialEq, Properties)]
+struct LineItemProps {
+    name: String,
+    price: isize,
+    unit: usize,
+    total: isize,
+}
+
+#[function_component]
+fn LineItem(props: &LineItemProps) -> Html {
+    let LineItemProps {
+        name,
+        price,
+        unit,
+        total,
+    } = props;
+    html! {
+        <tr>
+            <td class="align-left">{{ name }}</td>
+            <td class="align-right">{{format_currency(price)}}</td>
+            <td class="align-center">{{unit}}</td>
+            <td class="align-right">{{format_currency(total)}}</td>
+        </tr>
+    }
+}
+
 #[function_component]
 fn App() -> Html {
     let logo_url_handler = use_state(String::default);
@@ -83,6 +115,8 @@ fn App() -> Html {
             }
         })
     };
+
+    let line_items = vec!["one", "two", "three", "four", "five", "six", "seven"];
 
     html! {
         <div class="wrapper">
@@ -157,6 +191,11 @@ fn App() -> Html {
                         <th class="align-center">{{ "Aantal" }}</th>
                         <th class="align-center">{{ "Bedrag €" }}</th>
                     </tr>
+                    {
+                        line_items.into_iter().map(|num| {
+                            html! {<LineItem name={num} price={6500} unit={42} total={27300} />}
+                        }).collect::<Html>()
+                    }
                 </table>
 
                 <div class="payment-details">
