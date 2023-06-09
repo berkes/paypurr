@@ -77,7 +77,7 @@ fn App() -> Html {
                     Ok(date) => {
                         issued_on_handler.set(date);
                         due_on_handler.set(add_four_weeks(date));
-                    },
+                    }
                     Err(e) => error!("parse date: {}", e),
                 };
             }
