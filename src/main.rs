@@ -131,15 +131,43 @@ fn App() -> Html {
             </div>
 
             <div class="preview paper">
-                <img class="logo" src={ logo_url_value } alt="logo" />
-                <br/>
-                <strong>{{"to:"}}</strong><br/>
-                <p>{{ nl2br(to_value) }}</p>
-                <p><strong>{{"#"}}</strong>{{ number_value }}</p>
-                <p><strong>{{"issued on "}}</strong>{{ issued_on_value.format("%d-%m-%Y") }}</p>
-                <p><strong>{{"due on "}}</strong>{{ due_on_value.format("%d-%m-%Y") }}</p>
+                <img class="logo" alt="logo" src={{logo_url_value}} />
+                <div class="header">
+                    <div class="address">
+                        <strong>{{ "berkes - Bèr Kessels"}}</strong>
+                        {{ nl2br("Ooijse Bandijk 48\n6576 JE Ooij\nber@berk.es\nKVK:09157490\nBTW: NL001530822B70".to_string()) }}
+                    </div>
 
-                <p>{{ description_value }}</p>
+                    <div class="address">
+                        {{nl2br(to_value)}}
+                    </div>
+                </div>
+
+                <div class="meta">
+                    {{"#"}}{{number_value}}<br />
+                    {{"Verzonden op: "}}{{ issued_on_value.format("%d-%m-%Y") }}<br />
+                    {{"Te betalen voor: "}}{{ due_on_value.format("%d-%m-%Y") }}
+                </div>
+
+                <div class="description">{{ description_value }}</div>
+                <table class="main-table">
+                    <tr>
+                        <th></th>
+                        <th class="align-center">{{ "Prijs" }}</th>
+                        <th class="align-center">{{ "Aantal" }}</th>
+                        <th class="align-center">{{ "Bedrag €" }}</th>
+                    </tr>
+                </table>
+
+                <div class="payment-details">
+                    <p>{{"Graag voldoen naar: "}}<tt>{{"NL70 TRIO 0379 6282 60"}}</tt>{{" — berkes"}}</p>
+                </div>
+
+                <div class="foot">
+                    <p class="sign">{{"Vriendelijke groet,"}}</p>
+                    <hr />
+                    <p class="signa">{{"Bèr Kessels"}}</p>
+                </div>
             </div>
         </div>
     }

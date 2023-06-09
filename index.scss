@@ -101,3 +101,93 @@ textarea {
   width: 100%;
   padding: 0.5rem 0.75rem;
 }
+
+.preview {
+  background: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-family: 'Sorts Mill Goudy', serif;
+
+	.align-center {
+		text-align: center
+	}
+
+	.align-right {
+		text-align: right
+	}
+
+	.meta {
+		margin-top: 1rem;
+	}
+
+	.header {
+    margin-top: 3rem;
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.title {
+		padding-left: 20px;
+	}
+
+  .description {
+    margin-top: 1rem;
+  }
+  
+	.main-table {
+		border-collapse: collapse;
+		width: 100%;
+		text-align: left;
+		margin-top: 1rem;
+	}
+
+	.main-table td {
+		border: 0px;
+	}
+ 
+	.main-table tr {
+		height: 3rem;
+	}
+  
+  .main-table tr.subtotal {
+		border-top: 1px solid #000;
+	}
+  .main-table tr.total {
+		border-top: 3px double #000;
+	}
+
+	.main-table th {
+    border-bottom: 1px solid #000;
+		padding-left: 10px;
+	}
+
+	.main-table td {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+
+	.total {
+		padding-left: 8rem;
+	}
+
+	.totl {
+		padding-left: 11rem;
+	}
+
+	.amnt {
+		padding-right: 0rem;
+	}
+
+	.payment-details {
+    margin-top: 1rem;
+  }
+
+  .foot {
+    margin-top: 3rem;
+  }
+  .foot hr {
+    width: 33%;
+  }
+  .foot .sign {
+    margin-bottom: 3rem;
+  }
+}
