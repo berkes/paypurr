@@ -29,12 +29,17 @@ fn format_currency(amount: &isize) -> String {
     format!("€ {}.{}", euros, cents)
 }
 
-#[derive(PartialEq, Properties)]
+#[derive(PartialEq, Properties, Clone)]
 struct LineItemProps {
     name: String,
     price: isize,
     unit: usize,
     total: isize,
+}
+
+#[derive(PartialEq, Properties, Clone)]
+struct LineItemsTableProps {
+    line_items: Vec<LineItemProps>,
 }
 
 #[function_component]
@@ -52,6 +57,25 @@ fn LineItem(props: &LineItemProps) -> Html {
             <td class="align-center">{{unit}}</td>
             <td class="align-right">{{format_currency(total)}}</td>
         </tr>
+    }
+}
+
+#[function_component(LineItemsTable)]
+fn line_items_table(LineItemsTableProps { line_items }: &LineItemsTableProps) -> Html {
+    html! {
+        <table class="main-table">
+            <tr>
+                <th></th>
+                <th class="align-center">{{ "Prijs" }}</th>
+                <th class="align-center">{{ "Aantal" }}</th>
+                <th class="align-center">{{ "Bedrag €" }}</th>
+            </tr>
+            {
+                line_items.clone().into_iter().map(|li| {
+                    html! {<LineItem name={li.name} price={li.price} unit={li.unit} total={li.total} />}
+                }).collect::<Html>()
+            }
+        </table>
     }
 }
 
@@ -75,6 +99,8 @@ fn App() -> Html {
     let description_handler = use_state(String::default);
     let description_value =
         Html::from_html_unchecked(format!("<div>{}</div>", *description_handler).into());
+
+    let line_items_handler: UseStateHandle<Vec<LineItemProps>> = use_state(|| vec![]);
 
     fn create_update_handler<T>(handler: T) -> Callback<InputEvent>
     where
@@ -116,7 +142,27 @@ fn App() -> Html {
         })
     };
 
-    let line_items = vec!["one", "two", "three", "four", "five", "six", "seven"];
+    let update_line_items = {
+        let owned_line_items_handler = line_items_handler.clone();
+        Callback::from(move |_event: MouseEvent| {
+            let owned_line_items_value = &*owned_line_items_handler.clone();
+            let item_no = owned_line_items_value.len();
+
+            let new_entry = LineItemProps {
+                name: format!("Thing number {}", item_no),
+                price: 6500,
+                unit: 42,
+                total: 27300,
+            };
+
+            let new_line_items: Vec<LineItemProps> = owned_line_items_value
+                .into_iter()
+                .chain(Some(&new_entry))
+                .map(|li| li.clone())
+                .collect();
+            owned_line_items_handler.set(new_line_items);
+        })
+    };
 
     html! {
         <div class="wrapper">
@@ -162,6 +208,8 @@ fn App() -> Html {
                    rows="4"
                    oninput={update_description}
                 />
+
+                <button onclick={update_line_items} >{"Add Line Items!"}</button>
             </div>
 
             <div class="preview paper">
@@ -184,19 +232,8 @@ fn App() -> Html {
                 </div>
 
                 <div class="description">{{ description_value }}</div>
-                <table class="main-table">
-                    <tr>
-                        <th></th>
-                        <th class="align-center">{{ "Prijs" }}</th>
-                        <th class="align-center">{{ "Aantal" }}</th>
-                        <th class="align-center">{{ "Bedrag €" }}</th>
-                    </tr>
-                    {
-                        line_items.into_iter().map(|num| {
-                            html! {<LineItem name={num} price={6500} unit={42} total={27300} />}
-                        }).collect::<Html>()
-                    }
-                </table>
+
+                <LineItemsTable line_items={(*line_items_handler).clone()} />
 
                 <div class="payment-details">
                     <p>{{"Graag voldoen naar: "}}<tt>{{"NL70 TRIO 0379 6282 60"}}</tt>{{" — berkes"}}</p>
