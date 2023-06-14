@@ -20,7 +20,7 @@ fn add_four_weeks(date: NaiveDate) -> NaiveDate {
 }
 
 fn nl2br(input: String) -> VNode {
-    Html::from_html_unchecked(format!("<p>{}</p>", input.replace("\n", "<br/>")).into())
+    Html::from_html_unchecked(format!("<p>{}</p>", input.replace('\n', "<br/>")).into())
 }
 
 fn format_currency(amount: &isize) -> String {
@@ -100,7 +100,7 @@ fn App() -> Html {
     let description_value =
         Html::from_html_unchecked(format!("<div>{}</div>", *description_handler).into());
 
-    let line_items_handler: UseStateHandle<Vec<LineItemProps>> = use_state(|| vec![]);
+    let line_items_handler: UseStateHandle<Vec<LineItemProps>> = use_state(Vec::new);
 
     fn create_update_handler<T>(handler: T) -> Callback<InputEvent>
     where
@@ -109,11 +109,10 @@ fn App() -> Html {
         Callback::from(move |event: InputEvent| {
             if let Some(input) = event.target().and_then(|t| {
                 if let Some(input) = t.dyn_ref::<HtmlInputElement>() {
-                    Some::<String>(input.value().into())
-                } else if let Some(text_area) = t.dyn_ref::<HtmlTextAreaElement>() {
-                    Some::<String>(text_area.value().into())
+                    Some::<String>(input.value())
                 } else {
-                    None
+                    t.dyn_ref::<HtmlTextAreaElement>()
+                        .map(|text_area| text_area.value())
                 }
             }) {
                 handler(input);
@@ -156,9 +155,9 @@ fn App() -> Html {
             };
 
             let new_line_items: Vec<LineItemProps> = owned_line_items_value
-                .into_iter()
+                .iter()
                 .chain(Some(&new_entry))
-                .map(|li| li.clone())
+                .cloned()
                 .collect();
             owned_line_items_handler.set(new_line_items);
         })
